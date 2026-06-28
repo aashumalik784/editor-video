@@ -16,14 +16,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       
-      # Yahan hum path verify kar rahe hain
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       
       - name: Build with Gradle
         run: ./gradlew assembleDebug
       
-      # Agar file yahan nahi mili, toh humein path change karna hoga
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
