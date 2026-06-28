@@ -1,0 +1,37 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Shadow / Outer Glow of the Clapperboard -->
+    <path
+        android:fillColor="#33000000"
+        android:pathData="M27,47 h56 v33 c0,3 -2,5 -5,5 H32 c-3,0 -5,-2 -5,-5 Z" />
+
+    <!-- Clapperboard Base -->
+    <path
+        android:fillColor="#1A1A1A"
+        android:pathData="M25,45 h58 v33 c0,3 -2,5 -5,5 H30 c-3,0 -5,-2 -5,-5 Z" />
+
+    <!-- Clapperboard Stripes (Top Clapper Open) -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M25,35 l54,-12 l4,8 l-54,12 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M33,33.2 l6,-1.3 l3,6.5 l-6,1.3 Z M48,29.9 l6,-1.3 l3,6.5 l-6,1.3 Z M63,26.5 l6,-1.3 l3,6.5 l-6,1.3 Z" />
+
+    <!-- Clapperboard Bottom Stripes -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,45 l6,10 h8 l-6,-10 Z M50,45 l6,10 h8 l-6,-10 Z M70,45 l6,10 h8 l-6,-10 Z" />
+
+    <!-- AI Magic Spark (Center of the Clapper) -->
+    <path
+        android:fillColor="#FF7A00"
+        android:pathData="M54,51 l2,7 l7,2 l-7,2 l-2,7 l-2,-7 l-7,-2 l7,-2 Z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M54,54 l1,4 l4,1 l-4,1 l-1,4 l-1,-4 l-4,-1 l4,-1 Z" />
+</vector>

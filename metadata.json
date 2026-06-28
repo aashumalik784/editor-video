@@ -1,0 +1,6 @@
+{
+  "name": "CapCut AI",
+  "description": "An AI-powered native video editor with timeline controls, smart Auto-Cut, text overlays, filters, and audio analysis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
