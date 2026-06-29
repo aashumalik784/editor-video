@@ -24,14 +24,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
+        kotlinCompilerExtensionVersion = "1.5.1"
     }
 }
 
@@ -47,8 +44,6 @@ dependencies {
     // FFmpeg for video editing
     implementation("com.arthenica:mobile-ffmpeg-full:4.4.LTS")
     
-    // For picking video
     implementation("androidx.activity:activity-ktx:1.8.2")
-    
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
