@@ -36,13 +36,15 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose.bom:2023.10.01"))
+    
+    // Compose BOM - latest stable
+    implementation(platform("androidx.compose:compose-bom:2024.02.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     
-    // FFmpeg Kit - naya version, mavenCentral pe hai
-    implementation("com.arthenica:ffmpeg-kit-full:6.0-2")
+    // FFmpeg Kit - Sahi version 6.0.LTS hai
+    implementation("com.arthenica:ffmpeg-kit-full:6.0.LTS")
     
     implementation("androidx.activity:activity-ktx:1.8.2")
     debugImplementation("androidx.compose.ui:ui-tooling")
