@@ -2,6 +2,7 @@ package com.aistudio.capcutai.vhksld
 
 import android.net.Uri
 import android.os.Bundle
+import com.arthenica.ffmpegkit.ReturnCode
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -14,8 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.arthenica.mobileffmpeg.Config
-import com.arthenica.mobileffmpeg.FFmpeg
+import com.arthenica.ffmpegkit.FFmpegKitConfig
+import com.arthenica.ffmpegkit.FFmpegKit
 import java.io.File
 
 class MainActivity : ComponentActivity() {
@@ -92,8 +93,8 @@ fun trimVideo(context: android.content.Context, inputUri: Uri, onComplete: (Bool
     
     val cmd = "-i ${inputFile.absolutePath} -ss 0 -t 5 -c copy ${outputFile.absolutePath}"
     
-    FFmpeg.executeAsync(cmd) { executionId, returnCode ->
-        if (returnCode == Config.RETURN_CODE_SUCCESS) {
+    FFmpegKit.executeAsync(cmd) { executionId, returnCode ->
+        if (returnCode == ReturnCode.SUCCESS) {
             onComplete(true)
         } else {
             onComplete(false)

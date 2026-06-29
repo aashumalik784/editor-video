@@ -41,8 +41,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     
-    // FFmpeg for video editing
-    implementation("com.arthenica:mobile-ffmpeg-full:4.4.LTS")
+    // FFmpeg Kit - naya version, mavenCentral pe hai
+    implementation("com.arthenica:ffmpeg-kit-full:6.0-2")
     
     implementation("androidx.activity:activity-ktx:1.8.2")
     debugImplementation("androidx.compose.ui:ui-tooling")
