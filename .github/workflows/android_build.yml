@@ -1,5 +1,9 @@
 name: Build APK
-on: [push]
+
+on:
+  push:
+    branches: [ main ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,5 +17,6 @@ jobs:
           mkdir -p "$ANDROID_HOME/licenses"
           echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
           echo -e "\n84831b9409646a918e30573bab4c9c91346d8a7d" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
-      - run: chmod +x gradlew
-      - run: ./gradlew clean assembleDebug --no-daemon
+      - name: Build with Gradle
+        # --no-daemon aur --build-cache false se memory error nahi aayega
+        run: ./gradlew clean assembleDebug --no-daemon --no-build-cache --stacktrace
