@@ -42,7 +42,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     
     // FFmpeg Kit - Taner Sener wala, MavenCentral pe hai
-    implementation("com.tanersener:ffmpeg-kit-full:5.1")
+    implementation("com.tanersener:ffmpeg-kit-min:5.1.LTS")
     
     implementation("androidx.activity:activity-ktx:1.8.2")
     debugImplementation("androidx.compose.ui:ui-tooling")
