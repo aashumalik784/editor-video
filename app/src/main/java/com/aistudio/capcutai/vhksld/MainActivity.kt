@@ -96,11 +96,11 @@ fun trimVideo(context: android.content.Context, inputUri: Uri, onComplete: (Bool
 
     val transformer = Transformer.Builder(context)
         .addListener(object : Transformer.Listener {
-            override fun onCompleted(composition: Composition, result: ExportResult) {
+            override fun onCompleted(mediaItem: MediaItem, result: ExportResult) {
                 onComplete(true, outputFile.absolutePath)
             }
 
-            override fun onError(composition: Composition, result: ExportResult, exception: ExportException) {
+            override fun onError(mediaItem: MediaItem, result: ExportResult, exception: ExportException) {
                 onComplete(false, exception.message ?: "Unknown error")
             }
         })
