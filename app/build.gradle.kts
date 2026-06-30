@@ -41,8 +41,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     
-    // FFmpeg Kit 5.1.1 - Maven Central pe available hai
-    implementation("com.arthenica:ffmpeg-kit-full:5.1.1")
+    // FFmpeg Kit - Taner Sener wala, MavenCentral pe hai
+    implementation("com.tanersener:ffmpeg-kit-full:5.1")
     
     implementation("androidx.activity:activity-ktx:1.8.2")
     debugImplementation("androidx.compose.ui:ui-tooling")
