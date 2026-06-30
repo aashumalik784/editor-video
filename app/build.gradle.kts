@@ -41,8 +41,10 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     
-    // FFmpeg Kit - Taner Sener wala, MavenCentral pe hai
-    implementation("com.tanersener:ffmpeg-kit-min:5.1.LTS")
+    // Google Media3 - FFmpeg ka official replacement
+    implementation("androidx.media3:media3-transformer:1.3.1")
+    implementation("androidx.media3:media3-effect:1.3.1")
+    implementation("androidx.media3:media3-common:1.3.1")
     
     implementation("androidx.activity:activity-ktx:1.8.2")
     debugImplementation("androidx.compose.ui:ui-tooling")

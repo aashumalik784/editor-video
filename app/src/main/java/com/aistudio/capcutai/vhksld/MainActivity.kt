@@ -2,7 +2,6 @@ package com.aistudio.capcutai.vhksld
 
 import android.net.Uri
 import android.os.Bundle
-import com.arthenica.ffmpegkit.ReturnCode
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -15,8 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.arthenica.ffmpegkit.FFmpegKitConfig
-import com.arthenica.ffmpegkit.FFmpegKit
+import androidx.media3.common.MediaItem
+import androidx.media3.transformer.*
 import java.io.File
 
 class MainActivity : ComponentActivity() {
@@ -63,10 +62,10 @@ fun VideoEditorScreen() {
             Button(
                 onClick = {
                     isProcessing = true
-                    trimVideo(context, videoUri!!) { success ->
+                    trimVideo(context, videoUri!!) { success, path ->
                         isProcessing = false
-                        val msg = if (success) "Export Success!" else "Export Failed"
-                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                        val msg = if (success) "Saved: $path" else "Export Failed"
+                        Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
                     }
                 },
                 enabled = !isProcessing
@@ -82,22 +81,30 @@ fun VideoEditorScreen() {
     }
 }
 
-fun trimVideo(context: android.content.Context, inputUri: Uri, onComplete: (Boolean) -> Unit) {
-    val inputStream = context.contentResolver.openInputStream(inputUri)
-    val inputFile = File(context.cacheDir, "input.mp4")
-    inputStream?.use { input ->
-        inputFile.outputStream().use { output -> input.copyTo(output) }
-    }
-
+fun trimVideo(context: android.content.Context, inputUri: Uri, onComplete: (Boolean, String) -> Unit) {
     val outputFile = File(context.getExternalFilesDir(null), "edited_${System.currentTimeMillis()}.mp4")
     
-    val cmd = "-i ${inputFile.absolutePath} -ss 0 -t 5 -c copy ${outputFile.absolutePath}"
-    
-    FFmpegKit.executeAsync(cmd) { executionId, returnCode ->
-        if (returnCode == ReturnCode.SUCCESS) {
-            onComplete(true)
-        } else {
-            onComplete(false)
-        }
-    }
+    val inputMediaItem = MediaItem.Builder()
+        .setUri(inputUri)
+        .setClippingConfiguration(
+            MediaItem.ClippingConfiguration.Builder()
+                .setStartPositionMs(0)
+                .setEndPositionMs(5000)
+                .build()
+        )
+        .build()
+
+    val transformer = Transformer.Builder(context)
+        .addListener(object : Transformer.Listener {
+            override fun onCompleted(composition: Composition, result: ExportResult) {
+                onComplete(true, outputFile.absolutePath)
+            }
+
+            override fun onError(composition: Composition, result: ExportResult, exception: ExportException) {
+                onComplete(false, exception.message ?: "Unknown error")
+            }
+        })
+        .build()
+
+    transformer.start(inputMediaItem, outputFile.absolutePath)
 }
