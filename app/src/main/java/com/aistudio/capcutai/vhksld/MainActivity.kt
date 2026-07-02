@@ -1,110 +1,70 @@
 package com.aistudio.capcutai.vhksld
 
-import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.media3.common.MediaItem
-import androidx.media3.transformer.*
-import java.io.File
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackException
+import com.google.android.exoplayer2.Player
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private var player: ExoPlayer? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                VideoEditorScreen()
-            }
-        }
-    }
-}
+        // setContentView(R.layout.activity_main) // uncomment & adjust as needed
 
-@Composable
-fun VideoEditorScreen() {
-    val context = LocalContext.current
-    var videoUri by remember { mutableStateOf<Uri?>(null) }
-    var isProcessing by remember { mutableStateOf(false) }
+        // Create and prepare player
+        player = ExoPlayer.Builder(this).build().also { exo ->
+            // example: add a media item, prepare, etc.
+            // val item = MediaItem.fromUri("https://example.com/video.mp4")
+            // exo.setMediaItem(item)
+            // exo.prepare()
 
-    val pickVideoLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        videoUri = uri
-    }
-
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("Aashu Video Editor", style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(32.dp))
-
-        Button(onClick = { pickVideoLauncher.launch("video/*") }) {
-            Text("1. Select Video")
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        if (videoUri != null) {
-            Text("Video Selected ✓")
-            Spacer(Modifier.height(16.dp))
-
-            Button(
-                onClick = {
-                    isProcessing = true
-                    trimVideo(context, videoUri!!) { success, path ->
-                        isProcessing = false
-                        val msg = if (success) "Saved: $path" else "Export Failed"
-                        Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+            exo.addListener(object : Player.Listener {
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    if (playbackState == Player.STATE_ENDED) {
+                        exo.currentMediaItem?.let { mediaItem ->
+                            // call our completion handler with the correct MediaItem type
+                            onCompleted(mediaItem)
+                        }
                     }
-                },
-                enabled = !isProcessing
-            ) {
-                Text(if (isProcessing) "Processing..." else "2. Trim 5 Sec & Export")
-            }
-        }
-        
-        if (isProcessing) {
-            Spacer(Modifier.height(16.dp))
-            CircularProgressIndicator()
+                }
+
+                override fun onPlayerError(error: PlaybackException) {
+                    // pass the current media item (if any) and the error to our handler
+                    val current = exo.currentMediaItem
+                    if (current != null) {
+                        onError(current, error)
+                    } else {
+                        // fallback handling if no media item
+                        onError(null, error)
+                    }
+                }
+            })
         }
     }
-}
 
-fun trimVideo(context: android.content.Context, inputUri: Uri, onComplete: (Boolean, String) -> Unit) {
-    val outputFile = File(context.getExternalFilesDir(null), "edited_${System.currentTimeMillis()}.mp4")
-    
-    val inputMediaItem = MediaItem.Builder()
-        .setUri(inputUri)
-        .setClippingConfiguration(
-            MediaItem.ClippingConfiguration.Builder()
-                .setStartPositionMs(0)
-                .setEndPositionMs(5000)
-                .build()
-        )
-        .build()
+    // Corrected signatures: use MediaItem (not Composition)
+    // If the interface you're implementing expects non-null MediaItem, keep MediaItem (non-null).
+    // If it expects nullable, change to MediaItem?.
+    open fun onCompleted(mediaItem: MediaItem) {
+        // TODO: your completion logic here
+        // Example:
+        // Log.d("MainActivity", "Playback completed for: ${mediaItem.mediaId ?: mediaItem.localConfiguration?.uri}")
+    }
 
-    val transformer = Transformer.Builder(context)
-        .addListener(object : Transformer.Listener {
-            override fun onCompleted(mediaItem: MediaItem, result: ExportResult) { super.onCompleted(mediaItem, result)
-                onComplete(true, outputFile.absolutePath)
-            }
+    open fun onError(mediaItem: MediaItem?, throwable: Throwable?) {
+        // TODO: your error handling logic here
+        // mediaItem may be null if the error occurred before any media was set.
+        // Example:
+        // Log.e("MainActivity", "Playback error for item=$mediaItem", throwable)
+    }
 
-            override fun onError(mediaItem: MediaItem, result: ExportResult, exception: ExportException) { super.onError(mediaItem, result, exception)
-                onComplete(false, exception.message ?: "Unknown error")
-            }
-        })
-        .build()
-
-    transformer.start(inputMediaItem, outputFile.absolutePath)
+    override fun onDestroy() {
+        player?.release()
+        player = null
+        super.onDestroy()
+    }
 }
