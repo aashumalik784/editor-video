@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.Player
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,9 +18,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // setContentView(R.layout.activity_main) // uncomment & provide a layout if you have one
 
-        // Initialize ExoPlayer
+        // Initialize ExoPlayer (Media3)
         player = ExoPlayer.Builder(this).build().also { exo ->
-            // Example media item (replace with your URI)
+            // Example: prepare a media item if you need
             // val item = MediaItem.fromUri("https://storage.googleapis.com/exoplayer-test-media-0/play.mp3")
             // exo.setMediaItem(item)
             // exo.prepare()
@@ -44,16 +44,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Use correct types: MediaItem and PlaybackException/Throwable
+    // Use correct types from androidx.media3
     open fun onCompleted(mediaItem: MediaItem) {
-        // Playback completed for mediaItem
         Log.i(TAG, "Playback completed for mediaItem: ${mediaItem.mediaId ?: mediaItem.localConfiguration?.uri}")
-        Toast.makeText(this, "Playback completed", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@MainActivity, "Playback completed", Toast.LENGTH_SHORT).show()
     }
 
     open fun onError(mediaItem: MediaItem?, throwable: Throwable?) {
         Log.e(TAG, "Playback error for mediaItem=$mediaItem", throwable)
-        Toast.makeText(this, "Playback error: ${throwable?.message ?: "unknown"}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@MainActivity, "Playback error: ${throwable?.message ?: "unknown"}", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
