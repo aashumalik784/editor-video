@@ -1,6 +1,8 @@
 package com.aistudio.capcutai.vhksld
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -10,56 +12,48 @@ import com.google.android.exoplayer2.Player
 class MainActivity : AppCompatActivity() {
 
     private var player: ExoPlayer? = null
+    private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // setContentView(R.layout.activity_main) // uncomment & adjust as needed
+        // setContentView(R.layout.activity_main) // uncomment & provide a layout if you have one
 
-        // Create and prepare player
+        // Initialize ExoPlayer
         player = ExoPlayer.Builder(this).build().also { exo ->
-            // example: add a media item, prepare, etc.
-            // val item = MediaItem.fromUri("https://example.com/video.mp4")
+            // Example media item (replace with your URI)
+            // val item = MediaItem.fromUri("https://storage.googleapis.com/exoplayer-test-media-0/play.mp3")
             // exo.setMediaItem(item)
             // exo.prepare()
 
             exo.addListener(object : Player.Listener {
                 override fun onPlaybackStateChanged(playbackState: Int) {
+                    super.onPlaybackStateChanged(playbackState)
                     if (playbackState == Player.STATE_ENDED) {
                         exo.currentMediaItem?.let { mediaItem ->
-                            // call our completion handler with the correct MediaItem type
                             onCompleted(mediaItem)
                         }
                     }
                 }
 
                 override fun onPlayerError(error: PlaybackException) {
-                    // pass the current media item (if any) and the error to our handler
+                    super.onPlayerError(error)
                     val current = exo.currentMediaItem
-                    if (current != null) {
-                        onError(current, error)
-                    } else {
-                        // fallback handling if no media item
-                        onError(null, error)
-                    }
+                    onError(current, error)
                 }
             })
         }
     }
 
-    // Corrected signatures: use MediaItem (not Composition)
-    // If the interface you're implementing expects non-null MediaItem, keep MediaItem (non-null).
-    // If it expects nullable, change to MediaItem?.
+    // Use correct types: MediaItem and PlaybackException/Throwable
     open fun onCompleted(mediaItem: MediaItem) {
-        // TODO: your completion logic here
-        // Example:
-        // Log.d("MainActivity", "Playback completed for: ${mediaItem.mediaId ?: mediaItem.localConfiguration?.uri}")
+        // Playback completed for mediaItem
+        Log.i(TAG, "Playback completed for mediaItem: ${mediaItem.mediaId ?: mediaItem.localConfiguration?.uri}")
+        Toast.makeText(this, "Playback completed", Toast.LENGTH_SHORT).show()
     }
 
     open fun onError(mediaItem: MediaItem?, throwable: Throwable?) {
-        // TODO: your error handling logic here
-        // mediaItem may be null if the error occurred before any media was set.
-        // Example:
-        // Log.e("MainActivity", "Playback error for item=$mediaItem", throwable)
+        Log.e(TAG, "Playback error for mediaItem=$mediaItem", throwable)
+        Toast.makeText(this, "Playback error: ${throwable?.message ?: "unknown"}", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
